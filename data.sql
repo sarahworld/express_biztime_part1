@@ -3,10 +3,19 @@
 DROP TABLE IF EXISTS invoices;
 DROP TABLE IF EXISTS companies;
 
+CREATE TABLE industries (
+    code text PRIMARY KEY,
+    industry text NOT NULL UNIQUE
+    
+);
+
 CREATE TABLE companies (
     code text PRIMARY KEY,
     name text NOT NULL UNIQUE,
     description text
+    industry_code text NOT NULL,
+    FOREIGN KEY (industry_code)
+    REFERENCES industries (code)
 );
 
 CREATE TABLE invoices (
@@ -19,9 +28,11 @@ CREATE TABLE invoices (
     CONSTRAINT invoices_amt_check CHECK ((amt > (0)::double precision))
 );
 
+
+
 INSERT INTO companies
-  VALUES ('apple', 'Apple Computer', 'Maker of OSX.'),
-         ('ibm', 'IBM', 'Big blue.');
+  VALUES ('apple', 'Apple Computer', 'Maker of OSX.','Tech'),
+         ('ibm', 'IBM', 'Big blue.','Tech');
 
 INSERT INTO invoices (comp_Code, amt, paid, paid_date)
   VALUES ('apple', 100, false, null),

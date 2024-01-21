@@ -12,7 +12,7 @@ router.get('/', async (request, response) => {
 
 router.get('/:code', async (request, response) => {
     let code = request.params.code
-    const result = await db.query(`SELECT code, name, description FROM companies WHERE code=$1 `,[code])
+    const result = await db.query(`SELECT code, name, description, industry_code FROM companies WHERE code=$1 `,[code])
     return response.json({"company":result.rows})
 })
 
@@ -20,8 +20,8 @@ router.post('/', async (request, response, next) => {
     try{
         let { name, description } = request.body;
         let code = slugify(name, {lower: true});
-        const result = await db.query(`INSERT INTO companies (code, name, description)
-                                     VALUES ($1, $2, $3)
+        const result = await db.query(`INSERT INTO companies (code, name, description, industry_code)
+                                     VALUES ($1, $2, $3, $3)
                                      RETURNING code, name, description`,
                                 [code, name, description]);
         
@@ -33,6 +33,7 @@ router.post('/', async (request, response, next) => {
     }
 }
 )
+
 
 router.put('/', async (request, response, next) => {
     try{
